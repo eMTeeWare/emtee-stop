@@ -32,11 +32,7 @@ func main() {
 		fmt.Printf("Server responded with %s\n", response.Status)
 	} else {
 		data, _ := ioutil.ReadAll(response.Body)
-		responseString := string(data)
-		responseString = strings.Replace(responseString, "><", ">\n<", -1)
-		responseString = strings.Replace(responseString, "&#252;", "ü", -1)
-		responseString = strings.Replace(responseString, "&#246;", "ö", -1)
-		responseString = strings.Replace(responseString, "&#223;", "ß", -1)
+		responseString := normalizeXml(data)
 
 		type Timetable struct {
 			Station string `xml:"station,attr"`
@@ -54,4 +50,13 @@ func main() {
 		}
 
 	}
+}
+
+func normalizeXml(input []byte) string {
+	responseString := string(input)
+	responseString = strings.Replace(responseString, "><", ">\n<", -1)
+	responseString = strings.Replace(responseString, "&#252;", "ü", -1)
+	responseString = strings.Replace(responseString, "&#246;", "ö", -1)
+	responseString = strings.Replace(responseString, "&#223;", "ß", -1)
+	return responseString
 }
