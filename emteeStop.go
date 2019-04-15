@@ -42,7 +42,7 @@ func main() {
 			Station string `xml:"station,attr"`
 			Stops   []struct {
 				Id string `xml:"id,attr"`
-			} `xml:"Stops>s"`
+			} `xml:"s"`
 		}
 
 		var timetable Timetable
