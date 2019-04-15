@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -36,6 +37,21 @@ func main() {
 		responseString = strings.Replace(responseString, "&#252;", "ü", -1)
 		responseString = strings.Replace(responseString, "&#246;", "ö", -1)
 		responseString = strings.Replace(responseString, "&#223;", "ß", -1)
-		fmt.Println(responseString)
+
+		type Timetable struct {
+			Station string `xml:"station,attr"`
+			Stops   []struct {
+				Id string `xml:"id,attr"`
+			} `xml:"Stops>s"`
+		}
+
+		var timetable Timetable
+		err = xml.Unmarshal([]byte(responseString), &timetable)
+		if err != nil {
+			fmt.Printf("XML parsing error: %s\n", err)
+		} else {
+			fmt.Println(timetable)
+		}
+
 	}
 }
