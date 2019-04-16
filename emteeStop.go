@@ -6,13 +6,15 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
 	client := &http.Client{}
 	stationCode := "8000238"
-	date := "190415"
+	date := getCurrentDateForQuery()
 	hour := "20"
 	apiUrl := "https://api.deutschebahn.com/timetables/v1/plan/" + stationCode + "/" + date + "/" + hour
 	request, _ := http.NewRequest(http.MethodGet, apiUrl, nil)
@@ -50,6 +52,12 @@ func main() {
 		}
 
 	}
+}
+
+func getCurrentDateForQuery() string {
+	t := time.Now()
+	date := strconv.Itoa(t.Year())[2:] + fmt.Sprintf("%02d", int(t.Month())) + fmt.Sprintf("%02d", t.Day())
+	return date
 }
 
 func normalizeXml(input []byte) string {
