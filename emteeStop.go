@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -15,7 +16,7 @@ func main() {
 	client := &http.Client{}
 	stationCode := "8000238"
 	date := getCurrentDateForQuery()
-	hour := "20"
+	hour := getNextFullHourForQuery()
 	apiUrl := "https://api.deutschebahn.com/timetables/v1/plan/" + stationCode + "/" + date + "/" + hour
 	request, _ := http.NewRequest(http.MethodGet, apiUrl, nil)
 
@@ -52,6 +53,12 @@ func main() {
 		}
 
 	}
+}
+
+func getNextFullHourForQuery() string {
+	hour := fmt.Sprintf("%02d", int(math.Ceil(float64(time.Now().Hour()))))
+	fmt.Println(hour)
+	return hour
 }
 
 func getCurrentDateForQuery() string {
