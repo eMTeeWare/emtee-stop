@@ -4,7 +4,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
-	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -75,7 +74,7 @@ func main() {
 }
 
 func getNextFullHourForQuery() string {
-	hour := fmt.Sprintf("%02d", int(math.Ceil(float64(time.Now().Hour()))))
+	hour := fmt.Sprintf("%02d", time.Now().Hour()+1)
 	fmt.Println(hour)
 	return hour
 }
