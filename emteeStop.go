@@ -75,7 +75,6 @@ func main() {
 
 func getNextFullHourForQuery() string {
 	hour := fmt.Sprintf("%02d", time.Now().Hour()+1)
-	fmt.Println(hour)
 	return hour
 }
 
