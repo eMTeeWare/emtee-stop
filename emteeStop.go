@@ -27,6 +27,7 @@ func main() {
 
 	request.Header.Set("Authorization", "Bearer "+bearerToken)
 
+	fmt.Println("Requesting " + request.URL.String())
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
