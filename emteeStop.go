@@ -71,6 +71,13 @@ func main() {
 			fmt.Println(timetable)
 		}
 
+		for index, stop := range timetable.Stops {
+			departure := stop.Departure
+			if strings.Contains(departure.PlannedPath, "Hamburg") {
+				fmt.Printf("%02d: %s\n", index, departure.PlannedTime)
+			}
+		}
+
 	}
 }
 
