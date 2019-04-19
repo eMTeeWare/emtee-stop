@@ -75,11 +75,15 @@ func main() {
 			departure := stop.Departure
 			trainData := stop.TrainData
 			if strings.Contains(departure.PlannedPath, "Hamburg") && strings.Contains(trainData.TrainClass, "ME") {
-				fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, departure.PlannedTime, departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
+				fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
 			}
 		}
 
 	}
+}
+
+func formatTimeFromApiTimestamp(timestamp string) string {
+	return string(timestamp[6:8]) + ":" + string(timestamp[8:]) + " Uhr"
 }
 
 func getNextFullHourForQuery() string {
