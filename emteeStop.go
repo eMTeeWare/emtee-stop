@@ -17,7 +17,6 @@ func init() {
 }
 
 func main() {
-	client := &http.Client{}
 	stationCode := "8000238"
 	date := getCurrentDateForQuery()
 	hour := getNextFullHourForQuery()
@@ -34,7 +33,7 @@ func main() {
 
 	var timetable Timetable
 
-	requestDataFromDbApi(request, client, &timetable)
+	requestDataFromDbApi(request, &timetable)
 
 	for index, stop := range timetable.Stops {
 		departure := stop.Departure
@@ -45,7 +44,8 @@ func main() {
 	}
 }
 
-func requestDataFromDbApi(request *http.Request, client *http.Client, timetable *Timetable) {
+func requestDataFromDbApi(request *http.Request, timetable *Timetable) {
+	client := &http.Client{}
 	log.Debug("Requesting " + request.URL.String())
 	response, err := client.Do(request)
 	if err != nil {
