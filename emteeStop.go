@@ -12,8 +12,15 @@ import (
 	"time"
 )
 
+var bearerToken string
+
 func init() {
 	log.SetLevel(log.DebugLevel)
+	if len(os.Args) < 2 {
+		fmt.Println("Please provide your authorization token as the first parameter of the application")
+		os.Exit(401)
+	}
+	bearerToken = os.Args[1]
 }
 
 func main() {
@@ -21,14 +28,8 @@ func main() {
 	date := getCurrentDateForQuery()
 	hour := getNextFullHourForQuery()
 
-	if len(os.Args) < 2 {
-		fmt.Println("Please provide your authorization token as the first parameter of the application")
-		os.Exit(401)
-	}
-	bearerToken := os.Args[1]
-
 	var timetable Timetable
-	requestDataFromDbApi(&timetable, bearerToken, stationCode, date, hour)
+	requestDataFromDbApi(&timetable, stationCode, date, hour)
 
 	for index, stop := range timetable.Stops {
 		departure := stop.Departure
@@ -39,7 +40,7 @@ func main() {
 	}
 }
 
-func requestDataFromDbApi(timetable *Timetable, bearerToken string, stationCode string, date string, hour string) {
+func requestDataFromDbApi(timetable *Timetable, stationCode string, date string, hour string) {
 	apiUrl := "https://api.deutschebahn.com/timetables/v1/plan/" + stationCode + "/" + date + "/" + hour
 	request, _ := http.NewRequest(http.MethodGet, apiUrl, nil)
 	request.Header.Set("Authorization", "Bearer "+bearerToken)
