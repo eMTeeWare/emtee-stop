@@ -34,6 +34,18 @@ func main() {
 
 	var timetable Timetable
 
+	requestDataFromDbApi(request, client, &timetable)
+
+	for index, stop := range timetable.Stops {
+		departure := stop.Departure
+		trainData := stop.TrainData
+		if strings.Contains(departure.PlannedPath, "Hamburg") && strings.Contains(trainData.TrainClass, "ME") {
+			fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
+		}
+	}
+}
+
+func requestDataFromDbApi(request *http.Request, client *http.Client, timetable *Timetable) {
 	log.Debug("Requesting " + request.URL.String())
 	response, err := client.Do(request)
 	if err != nil {
@@ -49,14 +61,6 @@ func main() {
 			fmt.Printf("XML parsing error: %s\n", err)
 		} else {
 			log.Debug(timetable)
-		}
-	}
-
-	for index, stop := range timetable.Stops {
-		departure := stop.Departure
-		trainData := stop.TrainData
-		if strings.Contains(departure.PlannedPath, "Hamburg") && strings.Contains(trainData.TrainClass, "ME") {
-			fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
 		}
 	}
 }
