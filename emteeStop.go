@@ -20,8 +20,6 @@ func main() {
 	stationCode := "8000238"
 	date := getCurrentDateForQuery()
 	hour := getNextFullHourForQuery()
-	apiUrl := "https://api.deutschebahn.com/timetables/v1/plan/" + stationCode + "/" + date + "/" + hour
-	request, _ := http.NewRequest(http.MethodGet, apiUrl, nil)
 
 	if len(os.Args) < 2 {
 		fmt.Println("Please provide your authorization token as the first parameter of the application")
@@ -29,11 +27,8 @@ func main() {
 	}
 	bearerToken := os.Args[1]
 
-	request.Header.Set("Authorization", "Bearer "+bearerToken)
-
 	var timetable Timetable
-
-	requestDataFromDbApi(request, &timetable)
+	requestDataFromDbApi(&timetable, bearerToken, stationCode, date, hour)
 
 	for index, stop := range timetable.Stops {
 		departure := stop.Departure
@@ -44,7 +39,10 @@ func main() {
 	}
 }
 
-func requestDataFromDbApi(request *http.Request, timetable *Timetable) {
+func requestDataFromDbApi(timetable *Timetable, bearerToken string, stationCode string, date string, hour string) {
+	apiUrl := "https://api.deutschebahn.com/timetables/v1/plan/" + stationCode + "/" + date + "/" + hour
+	request, _ := http.NewRequest(http.MethodGet, apiUrl, nil)
+	request.Header.Set("Authorization", "Bearer "+bearerToken)
 	client := &http.Client{}
 	log.Debug("Requesting " + request.URL.String())
 	response, err := client.Do(request)
