@@ -27,6 +27,8 @@ func main() {
 
 	request.Header.Set("Authorization", "Bearer "+bearerToken)
 
+	var timetable Timetable
+
 	fmt.Println("Requesting " + request.URL.String())
 	response, err := client.Do(request)
 	if err != nil {
@@ -37,22 +39,20 @@ func main() {
 		data, _ := ioutil.ReadAll(response.Body)
 		responseString := normalizeXml(data)
 
-		var timetable Timetable
 		err = xml.Unmarshal([]byte(responseString), &timetable)
 		if err != nil {
 			fmt.Printf("XML parsing error: %s\n", err)
 		} else {
 			fmt.Println(timetable)
 		}
+	}
 
-		for index, stop := range timetable.Stops {
-			departure := stop.Departure
-			trainData := stop.TrainData
-			if strings.Contains(departure.PlannedPath, "Hamburg") && strings.Contains(trainData.TrainClass, "ME") {
-				fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
-			}
+	for index, stop := range timetable.Stops {
+		departure := stop.Departure
+		trainData := stop.TrainData
+		if strings.Contains(departure.PlannedPath, "Hamburg") && strings.Contains(trainData.TrainClass, "ME") {
+			fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
 		}
-
 	}
 }
 
