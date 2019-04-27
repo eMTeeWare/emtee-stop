@@ -44,8 +44,7 @@ func main() {
 }
 
 func getCurrentFullHourForQuery() string {
-	hour := fmt.Sprintf("%02d", time.Now().Hour())
-	return hour
+	return fmt.Sprintf("%02d", time.Now().Hour())
 }
 
 func requestDataFromDbApi(timetable *Timetable, stationCode string, date string, hour string) {
@@ -77,14 +76,12 @@ func formatTimeFromApiTimestamp(timestamp string) string {
 }
 
 func getNextFullHourForQuery() string {
-	hour := fmt.Sprintf("%02d", time.Now().Hour()+1)
-	return hour
+	return fmt.Sprintf("%02d", time.Now().Hour()+1)
 }
 
 func getCurrentDateForQuery() string {
 	t := time.Now()
-	date := strconv.Itoa(t.Year())[2:] + fmt.Sprintf("%02d", int(t.Month())) + fmt.Sprintf("%02d", t.Day())
-	return date
+	return strconv.Itoa(t.Year())[2:] + fmt.Sprintf("%02d", int(t.Month())) + fmt.Sprintf("%02d", t.Day())
 }
 
 func normalizeXml(input []byte) string {
