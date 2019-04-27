@@ -12,8 +12,11 @@ import (
 	"time"
 )
 
-func main() {
+func init() {
 	log.SetLevel(log.DebugLevel)
+}
+
+func main() {
 	client := &http.Client{}
 	stationCode := "8000238"
 	date := getCurrentDateForQuery()
