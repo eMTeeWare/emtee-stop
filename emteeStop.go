@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	log.SetLevel(log.DebugLevel)
 	client := &http.Client{}
 	stationCode := "8000238"
 	date := getCurrentDateForQuery()
@@ -29,7 +31,7 @@ func main() {
 
 	var timetable Timetable
 
-	fmt.Println("Requesting " + request.URL.String())
+	log.Debug("Requesting " + request.URL.String())
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
@@ -43,7 +45,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("XML parsing error: %s\n", err)
 		} else {
-			fmt.Println(timetable)
+			log.Debug(timetable)
 		}
 	}
 
