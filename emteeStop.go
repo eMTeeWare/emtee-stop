@@ -34,6 +34,9 @@ func main() {
 	hour = getCurrentFullHourForQuery()
 	requestDataFromDbApi(&timetable, stationCode, date, hour)
 
+	hour = getPreviousFullHourForQuery()
+	requestDataFromDbApi(&timetable, stationCode, date, hour)
+
 	for index, stop := range timetable.Stops {
 		departure := stop.Departure
 		trainData := stop.TrainData
@@ -41,6 +44,10 @@ func main() {
 			fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
 		}
 	}
+}
+
+func getPreviousFullHourForQuery() string {
+	return fmt.Sprintf("%02d", time.Now().Hour()-1)
 }
 
 func getCurrentFullHourForQuery() string {
