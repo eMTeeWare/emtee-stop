@@ -37,12 +37,22 @@ func main() {
 	hour = getPreviousFullHourForQuery()
 	requestDataFromDbApi(&timetable, stationCode, date, hour)
 
-	for index, stop := range timetable.Stops {
+	var trips []Trip
+
+	for _, stop := range timetable.Stops {
 		departure := stop.Departure
 		trainData := stop.TrainData
 		if strings.Contains(departure.PlannedPath, "Hamburg") && strings.Contains(trainData.TrainClass, "ME") {
-			fmt.Printf("%02d: %s: %s von Gleis %s\t%s\n", index, formatTimeFromApiTimestamp(departure.PlannedTime), departure.TrainLine, departure.PlannedPlatform, departure.PlannedPath)
+			trips = append(trips, Trip{PlannedPlatform: departure.PlannedPlatform, TrainLine: departure.TrainLine, PlannedPath: departure.PlannedPath, PlannedTime: departure.PlannedTime, Id: stop.Id, ActualPlatform: "", ActualTime: ""})
 		}
+	}
+
+	printTrips(trips)
+}
+
+func printTrips(trips []Trip) {
+	for _, trip := range trips {
+		fmt.Printf("%s: %s: %s von Gleis %s\t%s\n", trip.Id, formatTimeFromApiTimestamp(trip.PlannedTime), trip.TrainLine, trip.PlannedPlatform, trip.PlannedPath)
 	}
 }
 
